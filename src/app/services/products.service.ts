@@ -15,10 +15,9 @@ export class ProductsService {
   constructor(private httpService: HttpService) { }
 
   initProducts(){
-    console.log("initProducts");
     if(this.productsSubject.value.length==0){
       this.httpService.getAll("products").subscribe(res=>{
-        console.log(res);
+        console.log(res, "products");
         this.productsSubject.next(res);
       })
     }

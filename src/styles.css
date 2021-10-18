@@ -1,1 +1,24 @@
-/* You can add global styles to this file, and also import other style files */
+.main-nav{
+  background-color: rgb(75, 76, 189);
+  align-items: center;
+}
+.img_brand{
+  position: relative;
+  display: block;
+  left: 30%;
+}
+#app_name{
+  padding-right: 10%;
+}
+body{
+  height: 100vh;
+  background-color: #dcdcef;
+}
+#customer_img{
+  max-width: 100px;
+}
+#customer_card{
+  border: 1px solid grey;
+  margin: 1%;
+}
+
