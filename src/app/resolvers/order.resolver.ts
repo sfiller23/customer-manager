@@ -23,6 +23,7 @@ export class OrderResolver implements Resolve<OrderDetails> {
       const id = route.paramMap.get("id");
 
       const orderDetails: OrderDetails = {
+        orderId: '',
         firstName: '',
         lastName: '',
         productsNames: [],
