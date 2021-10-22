@@ -7,7 +7,6 @@ import {
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { HttpService } from '../services/http.service';
-import { OrderDetails } from '../interfaces/orderDetails';
 import { CustomersService } from '../services/customers.service';
 import { Customer } from '../interfaces/customer';
 

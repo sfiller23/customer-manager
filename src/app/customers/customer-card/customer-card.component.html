@@ -1,0 +1,19 @@
+<div class="row">
+  <div *ngFor="let customer of this.customerService.customers$ | async" id="customer_card" class="col-md-2">
+    <div class="row">
+      <span class=col-md-6><h2>name: {{customer.firstName}} {{customer.lastName}}</h2></span>
+      <span class=col-md-6><a routerLink="customer/edit/{{customer.id}}">edit</a></span>
+    </div>
+    <div class="row">
+      <span class="col-md-5">
+        <img *ngIf="customer.gender=='male'" id="customer_img" src="assets/images/male.png" alt="">
+        <img *ngIf="customer.gender=='female'" id="customer_img" src="assets/images/female.png" alt="">
+      </span>
+      <span class="col-md-7">
+        <div>countery: {{customer.country}}</div>
+        <div>city: {{customer.city}}</div>
+        <div><a routerLink="order/{{customer.id}}">View Orders</a></div>
+      </span>
+    </div>
+  </div>
+</div>

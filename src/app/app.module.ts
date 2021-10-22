@@ -6,7 +6,7 @@ import { AppComponent } from './app.component';
 import { OrdersComponent } from './orders/orders.component';
 import { ViewOrdersComponent } from './orders/view-orders/view-orders.component';
 import { ViewNavComponent } from './view-nav/view-nav.component';
-import { CustomerCardComponent } from './customer-card/customer-card.component';
+import { CustomerCardComponent } from './customers/customer-card/customer-card.component';
 import { HttpClientModule } from '@angular/common/http';
 import { MainNavComponent } from './main-nav/main-nav.component';
 import { CustomersComponent } from './customers/customers.component';
@@ -22,9 +22,9 @@ import { ReactiveFormsModule } from '@angular/forms';
     OrdersComponent,
     ViewOrdersComponent,
     ViewNavComponent,
-    CustomerCardComponent,
     MainNavComponent,
     CustomersComponent,
+    CustomerCardComponent,
     AddCustomerComponent,
     EditCustomerComponent,
     ViewCustomerComponent,

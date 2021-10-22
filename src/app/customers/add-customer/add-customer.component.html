@@ -1,0 +1,45 @@
+<form [formGroup]="addForm" (ngSubmit)="onSubmit()">
+
+  <div class="form-group">
+    <span for="firstName">First Name</span>
+    <input class="form-control" id="firstName" placeholder="" type="text" formControlName="firstName">
+  </div>
+
+  <div class="form-group">
+    <span for="lastName">Last Name</span>
+    <input class="form-control" id="lastName" placeholder="" type="text" formControlName="lastName">
+  </div>
+
+  <div class="form-group">
+    <span for="country">Country</span>
+    <input class="form-control" id="country" placeholder="" type="text" formControlName="country">
+  </div>
+
+  <div class="form-group">
+    <span for="gender">Gender</span>
+    <select class="form-control" id="gender" placeholder="" type="text" formControlName="gender">
+      <option value="male">Male</option>
+      <option value="female">Female</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <span for="city">City</span>
+    <input class="form-control" id="city" placeholder="" type="text" formControlName="city">
+  </div>
+
+  <div class="form-group">
+    <span for="address">Addrres</span>
+    <input class="form-control" id="address" placeholder="" type="text" formControlName="address">
+  </div>
+
+  <div class="form-group">
+    <span for="products">Add Products</span>
+    <select class="form-control" open id="products" formControlName="products" multiple>
+      <option *ngFor="let product of this.productsService.products$ | async" value="{{product.id}}">{{product.name}}</option>
+    </select>
+  </div>
+
+
+  <button type="submit" class="btn btn-outline-primary" [disabled]="!addForm.valid">Save</button>
+</form>
