@@ -27,7 +27,7 @@ export class ProductsService {
   getProducts(ids: string[]): Observable<Product[]>{
     const currentProducts = this.productsSubject.value;
     let product: any[] = currentProducts.filter(product=>ids.includes(product.id));
-    if(product){
+    if(product.length!==0){
       return of(product);
     }
     return this.httpService.getItems('products',ids);

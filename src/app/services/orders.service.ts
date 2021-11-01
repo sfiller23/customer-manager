@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 import { last, map } from 'rxjs/operators';
 import { Order } from '../interfaces/order';
 import { Product } from '../interfaces/product';
 import { HttpService } from './http.service';
 import { ProductsService } from './products.service';
+import { OrderDetails } from '../interfaces/orderDetails';
+import { CustomersService } from './customers.service';
 
 @Injectable({
   providedIn: 'root'
@@ -23,6 +25,15 @@ export class OrdersService {
       this.httpService.getAll('orders').subscribe(res=>{
         this.ordersSubject.next(res);
       })
+    }
+  }
+
+  getAllOrders(): Observable<Order[]>{
+    if(this.ordersSubject.value.length!==0){
+      console.log(this.ordersSubject.value.length, 'length');
+      return of(this.ordersSubject.value);
+    }else{
+      return this.httpService.getAll('orders');
     }
   }
 
@@ -52,6 +63,19 @@ export class OrdersService {
     })
     this.ordersSubject.next(currentOrders);
     this.httpService.edit('orders',newOrderDetails,id).subscribe();
+  }
+
+  getOrder(id: string): Observable<Order | undefined>{
+    if(this.ordersSubject.value){
+      const currentOrders: Order[] = this.ordersSubject.value;
+      const currentOrder: Order | undefined = currentOrders.find(order=>order.id===id);
+      return of(currentOrder);
+    }else{
+       return this.httpService.getItem('orders', id).pipe(map(res=>{
+         const currentOrder: Order = {...res};
+         return currentOrder;
+       }));
+    }
   }
 
   private orderTotalSum(ids: string[]): Observable<number>{
