@@ -9,52 +9,26 @@ import { map } from 'rxjs/operators';
 import { HttpService } from '../services/http.service';
 import { Customer } from '../interfaces/customer';
 import { Product } from '../interfaces/product';
+import { OrdersService } from '../services/orders.service';
+import { OrderDetailsService } from '../services/order-details.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class OrderResolver implements Resolve<any> {
 
-  constructor(private httpService: HttpService) {}
+  constructor(private httpService: HttpService, private orderDetailsService: OrderDetailsService) {}
 
-  resolve(route: ActivatedRouteSnapshot) {
+  resolve(route: ActivatedRouteSnapshot): any{
 
-      // const id = route.paramMap.get("id");
+    const id = route.paramMap.get("id");
+    console.log(id);
 
-      // const orderDetails: OrderDetails = {
-      //   orderId: '',
-      //   firstName: '',
-      //   lastName: '',
-      //   productsNames: [],
-      //   productsPrices: [],
-      //   totalSum: 0,
-      // }
-
-      // let orderDetails$: Observable<typeof orderDetails> = new Observable<typeof orderDetails>();
-
-      // if(id){
-      //   orderDetails$ = this.httpService.getItemC('customers',id).pipe(map(customer=>{
-      //       let sum = 0;
-      //       orderDetails.firstName = customer.firstName;
-      //       orderDetails.lastName = customer.lastName;
-      //       this.httpService.getItems('products',customer.products).subscribe(products=>{
-      //         let sum = 0;
-      //         console.log(products);
-      //         products.forEach(product=>{
-      //           console.log(product.name);
-      //           orderDetails.productsNames?.push(product.name);
-      //           orderDetails.productsPrices?.push(product.price);
-      //           sum += product.price;
-      //         });
-      //         orderDetails.totalSum = sum;
-
-      //       });
-      //       return orderDetails;
-      //     }))
-      // }
-
-
-
-      // return orderDetails$;
+    if(id){
+      console.log("resolving");
+      this.orderDetailsService.setOrderDetailsByCustomerId(id);
+    }else{
+      return of(null);
+    }
   }
 }

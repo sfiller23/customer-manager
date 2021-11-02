@@ -26,7 +26,10 @@ export class HttpService {
     return this.http.put(`${environment.API_END_POINT}/${model}/${id}.json`,data);
   }
   getItem(model:string, id:string): Observable<any>{
-    return this.http.get(`${environment.API_END_POINT}/${model}/${id}.json`);
+    return this.http.get(`${environment.API_END_POINT}/${model}/${id}.json`).pipe(map(res=>{
+      const item = {...res, id};
+      return item;
+    }));
   }
 
   getItems(model:string, ids:string[]): Observable<Product[]>{
@@ -40,6 +43,10 @@ export class HttpService {
 
   deleteItem(model:string, id:string){
     return this.http.delete(`${environment.API_END_POINT}/${model}/${id}.json`);
+  }
+
+  updateItem(model:string, id:any, item:string, data: string[]){
+    return this.http.put(`${environment.API_END_POINT}/${model}/${id}/${item}.json`, data);
   }
 
 }

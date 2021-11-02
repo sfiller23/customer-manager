@@ -36,7 +36,7 @@
   <div class="form-group">
     <span for="products">Add Products</span>
     <select class="form-control" open id="products" formControlName="products" multiple>
-      <option *ngFor="let product of this.productsService.products$ | async" value="{{product.id}}">{{product.name}}</option>
+      <option *ngFor="let product of this.productsService.products$ | async; let i = index" value="{{product.id}}"><span *ngIf="i!==0">{{i}}. {{product.name}}: {{product.price | currency}}</span></option>
     </select>
   </div>
 

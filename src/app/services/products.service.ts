@@ -1,8 +1,10 @@
+import { CustomersService } from './customers.service';
 import { nullSafeIsEquivalent } from '@angular/compiler/src/output/output_ast';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { Product } from '../interfaces/product';
 import { HttpService } from './http.service';
+import { Customer } from '../interfaces/customer';
 
 @Injectable({
   providedIn: 'root'
@@ -31,6 +33,14 @@ export class ProductsService {
       return of(product);
     }
     return this.httpService.getItems('products',ids);
+  }
+
+  deleteProduct(productId: string, customer: Customer){
+    const currentProducts: string[] = customer.products;
+    let updatedProducts: string[] = currentProducts.filter(id=>id!==productId);
+    console.log(updatedProducts);
+    this.httpService.updateItem("customers",customer.id,"products",updatedProducts).subscribe();
+
   }
 
 

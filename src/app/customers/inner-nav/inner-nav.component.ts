@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Customer } from '../../interfaces/customer';
 
 @Component({
   selector: 'app-inner-nav',
@@ -7,9 +9,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class InnerNavComponent implements OnInit {
 
-  constructor() { }
+  @Input() customerId: string = '';
+
+  constructor(private route: ActivatedRoute) {
+
+  }
 
   ngOnInit(): void {
+    console.log(this.customerId,"innerNav");
+
   }
+
+
+
+
 
 }

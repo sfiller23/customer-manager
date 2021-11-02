@@ -23,9 +23,10 @@ export class CustomerResolver implements Resolve<any> {
 
       let currentCustomer;
 
+      console.log("im resolving");
+
       if(id){
         currentCustomer = this.customerService.getCustomer(id);
-        console.log(currentCustomer, "in customer resolver");
         return currentCustomer;
       }else{
         return of(null);

@@ -35,15 +35,15 @@
 
   <div class="form-group">
     <h3>Products</h3>
-    <!-- <ul>
-      <li *ngFor="let name of orderDetails.productsNames">{{name}}<span class="btn btn-outline-danger">remove</span></li>
-    </ul> -->
+    <ul>
+      <li *ngFor="let product of customerProducts; let i = index"><span>{{i+1}}. {{product.name}}: {{product.price | currency}}<button (click)=deleteProduct(product.id) class="btn btn-outline-danger"><i class="bi bi-trash"></i></button></span></li>
+    </ul>
   </div>
 
   <div class="form-group">
     <span for="products">Add Products</span>
     <select class="form-control" open id="products" formControlName="products" multiple>
-      <option *ngFor="let product of this.productsService.products$ | async" value="{{product.id}}">{{product.name}}</option>
+      <option *ngFor="let product of this.productsService.products$ | async; let i = index" value="{{product.id}}"><span *ngIf="i!==0">{{i}}. {{product.name}}: {{product.price | currency}}</span></option>
     </select>
   </div>
 

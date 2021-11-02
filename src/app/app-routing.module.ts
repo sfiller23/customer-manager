@@ -15,13 +15,15 @@ const routes: Routes = [
   {path: 'customers',component:CustomerCardComponent,},
   {
     path: 'customers/customer', component: CustomersComponent,
+    // resolve:{
+    //     customer: CustomerResolver,
+    // },
     children: [
       {path: 'add', component:AddCustomerComponent},
       {path: 'edit/:id', component:EditCustomerComponent,
-        // resolve:{
-        //   customer: CustomerResolver,
-        //   order: OrderResolver
-        // }
+        resolve:{
+          customer: CustomerResolver,
+        }
       },
       {path: 'view/:id', component:ViewCustomerComponent},
 
@@ -30,9 +32,9 @@ const routes: Routes = [
   },
   {path: 'customers/orders', component:OrdersComponent},
   {path: 'customers/order/:id', component:ViewOrdersComponent,
-    // resolve:{
-    //   order: OrderResolver
-    // }
+    resolve:{
+      order: OrderResolver
+    }
   },
   //{path: 'customers/customer', loadChildren: () => import('./customers/customers.module').then(m => m.CustomersModule)},
 

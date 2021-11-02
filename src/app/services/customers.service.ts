@@ -2,8 +2,11 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { Customer } from '../interfaces/customer';
 import { Order } from '../interfaces/order';
+import { Product } from '../interfaces/product';
 import { HttpService } from './http.service';
 import { OrdersService } from './orders.service';
+import { ProductsService } from './products.service';
+import { Router } from '@angular/router';
 
 
 @Injectable({
@@ -14,7 +17,7 @@ export class CustomersService {
   private customersSubject = new BehaviorSubject<Customer[]>([]);
   customers$: Observable<Customer[]> = this.customersSubject.asObservable();
 
-  constructor(private httpService: HttpService, private ordersService: OrdersService) {
+  constructor(private router:Router, private httpService: HttpService, private ordersService: OrdersService) {
     this.initCustomers();
   }
 
@@ -43,17 +46,23 @@ export class CustomersService {
       this.ordersService.addOrder(newOrder);
     })
     console.log("customer Added");
-
   }
 
   editCustomer(newCustomerDetails: Customer, id: string){
-    const currentCustomers: Customer[] = this.customersSubject.value;
-    currentCustomers.forEach(customer=>{
-      if(customer.id = id){
-        customer = newCustomerDetails;
-      }
-    })
+    let currentCustomers: Customer[] = this.customersSubject.value;
+
+    let updatedCustomer = currentCustomers.find(customer=>customer.id===id);
+
+    let indexOfUpdatedCustomer: number = 0;
+
+    if(updatedCustomer){
+      indexOfUpdatedCustomer = currentCustomers.indexOf(updatedCustomer);
+    }
+
+    currentCustomers[indexOfUpdatedCustomer] = newCustomerDetails;
+
     this.customersSubject.next(currentCustomers);
+
     this.httpService.edit('customers',newCustomerDetails,id).subscribe();
 
   }
@@ -65,5 +74,16 @@ export class CustomersService {
       return of(cuurentCustomer);
     }
     return this.httpService.getItem('customers',id);
+  }
+
+  removeProduct(customerId: any, productId: string): void{
+    let currentCustomers: Customer[] = this.customersSubject.value;
+    let currentCustomer: any = currentCustomers.find(customer=>customer.id===customerId);
+    const currentCustomerProducts: string[] = currentCustomer.products;
+    let updatedProducts = currentCustomerProducts.filter(id=>id!==productId);
+    currentCustomer.products = updatedProducts;
+    let indexOfCustomer = currentCustomers.indexOf(currentCustomer);
+    currentCustomers[indexOfCustomer] = currentCustomer;
+    this.customersSubject.next(currentCustomers);
   }
 }

@@ -7,9 +7,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CustomersComponent implements OnInit {
 
+  customerId: string = '';
+
   constructor() { }
 
   ngOnInit(): void {
   }
+
+  getId(): void{
+    console.log("emited");
+  }
+
+
 
 }
