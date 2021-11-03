@@ -7,6 +7,7 @@ import { HttpService } from '../services/http.service';
 import { first } from 'rxjs/operators';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { ProductsService } from '../services/products.service';
+import { CustomerDetailsServiceService } from '../services/customer-details-service.service';
 
 @Component({
   selector: 'app-orders',
@@ -19,7 +20,7 @@ export class OrdersComponent implements OnInit, OnDestroy {
 
   subscription: Subscription = new Subscription();
 
-  constructor(private customersService: CustomersService ,public ordersService: OrdersService, private httpService: HttpService, private productsService: ProductsService) { }
+  constructor(private customerDetailsService: CustomerDetailsServiceService,private customersService: CustomersService ,public ordersService: OrdersService, private httpService: HttpService, private productsService: ProductsService) { }
 
   ngOnInit(): void {
     let orderPageItems: OrderDetails[] = [];

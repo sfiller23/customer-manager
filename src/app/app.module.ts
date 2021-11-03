@@ -36,6 +36,9 @@ import { ReactiveFormsModule } from '@angular/forms';
     HttpClientModule,
     ReactiveFormsModule,
   ],
+  exports:[
+    EditCustomerComponent
+  ],
   providers: [],
   bootstrap: [AppComponent]
 })

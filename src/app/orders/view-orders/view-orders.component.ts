@@ -4,6 +4,7 @@ import { OrderDetails } from '../../interfaces/orderDetails';
 import { OrderDetailsService } from '../../services/order-details.service';
 import { Subscription } from 'rxjs';
 import { first, last, take } from 'rxjs/operators';
+import { CustomerDetailsServiceService } from '../../services/customer-details-service.service';
 
 @Component({
   selector: 'app-view-orders',
@@ -19,9 +20,11 @@ export class ViewOrdersComponent implements OnInit, OnDestroy {
     totalSum: 0,
   };
 
+  customer: any;
+
   subscription: Subscription = new Subscription();
 
-  constructor(private orderdetailsService: OrderDetailsService) {
+  constructor(private route: ActivatedRoute,private customerDetailsServiceService: CustomerDetailsServiceService ,private orderdetailsService: OrderDetailsService) {
   }
 
   ngOnInit(): void {
@@ -29,6 +32,11 @@ export class ViewOrdersComponent implements OnInit, OnDestroy {
       console.log(orderDetails);
       this.orderDetails = orderDetails;
     })
+
+    this.customer = this.route.snapshot.data["customer"];
+    if(this.customer){
+      this.customerDetailsServiceService.initCustomer(this.customer);
+    }
   }
 
   ngOnDestroy(){

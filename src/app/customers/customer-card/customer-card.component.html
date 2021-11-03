@@ -1,19 +1,50 @@
 <div class="row">
+  <ng-container *ngIf="pageView==='card'">
   <div *ngFor="let customer of this.customerService.customers$ | async" id="customer_card" class="col-md-2">
-    <div class="row">
-      <span class=col-md-6><h2>name: {{customer.firstName}} {{customer.lastName}}</h2></span>
-      <span class=col-md-6><a routerLink="customer/edit/{{customer.id}}">edit</a></span>
+
+      <div class="row">
+        <span class=col-md-6><h2><a routerLink="customer/view/{{customer.id}}">name: {{customer.firstName}} {{customer.lastName}}</a></h2></span>
+        <span class=col-md-6><a routerLink="customer/edit/{{customer.id}}">edit</a></span>
+        <button *ngIf="customer.id" (click)=deleteCustomer(customer.id) class="btn btn-outline-danger"><i class="bi bi-trash"></i></button>
+      </div>
+      <div class="row">
+        <span class="col-md-5">
+          <img *ngIf="customer.gender=='male'" id="customer_img" src="assets/images/male.png" alt="">
+          <img *ngIf="customer.gender=='female'" id="customer_img" src="assets/images/female.png" alt="">
+        </span>
+        <span class="col-md-7">
+          <div>countery: {{customer.country}}</div>
+          <div>city: {{customer.city}}</div>
+          <div><a routerLink="customer/order/{{customer.id}}">View Orders</a></div>
+        </span>
+      </div>
     </div>
-    <div class="row">
-      <span class="col-md-5">
-        <img *ngIf="customer.gender=='male'" id="customer_img" src="assets/images/male.png" alt="">
-        <img *ngIf="customer.gender=='female'" id="customer_img" src="assets/images/female.png" alt="">
-      </span>
-      <span class="col-md-7">
-        <div>countery: {{customer.country}}</div>
-        <div>city: {{customer.city}}</div>
-        <div><a routerLink="order/{{customer.id}}">View Orders</a></div>
-      </span>
-    </div>
-  </div>
+    </ng-container>
+    <ng-container *ngIf="pageView==='list'">
+        <table>
+          <tr>
+            <th></th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Address</th>
+            <th>City</th>
+            <th>Country</th>
+            <th>Order Total</th>
+            <th></th>
+          </tr>
+          <tr *ngFor="let customer of this.customerService.customers$ | async">
+            <td>
+              <img *ngIf="customer.gender=='male'" id="customer_img" src="assets/images/male.png" alt="">
+              <img *ngIf="customer.gender=='female'" id="customer_img" src="assets/images/female.png" alt="">
+            </td>
+            <td>{{customer.firstName}}</td>
+            <td>{{customer.lastName}}</td>
+            <td>{{customer.address}}</td>
+            <td>{{customer.city}}</td>
+            <td>{{customer.country}}</td>
+            <td>totalOrder</td>
+          </tr>
+        </table>
+    </ng-container>
+
 </div>

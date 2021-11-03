@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { CustomersService } from '../../services/customers.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-view-customer',
@@ -7,9 +9,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ViewCustomerComponent implements OnInit {
 
-  constructor() { }
+  customer: any;
+
+  constructor(private customersService: CustomersService, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
+
+    const customerId = this.route.params.subscribe(params=>{
+      this.customersService.getCustomer(params.id).subscribe(customer=>{
+        this.customer = customer;
+      })
+    })
+
+    //
   }
 
 }

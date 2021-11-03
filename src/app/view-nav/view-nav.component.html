@@ -1,9 +1,9 @@
 <nav class="row main-nav">
   <span class="col-md-2">
-    <a type="button" class="btn btn-primary" routerLink="customers">Card View</a>
+    <button (click)="pageView=this.pageService.setPageView('card')" [ngClass]="{ 'active': pageView==='card' }" type="button" class="btn btn-primary">Card View</button>
   </span>
   <span class="col-md-2">
-    <a type="button" class="btn btn-primary" routerLink="customers">List View</a>
+    <button (click)="pageView=this.pageService.setPageView('list')" [ngClass]="{ 'active': pageView==='list' }" type="button" class="btn btn-primary">List View</button>
   </span>
   <span class="col-md-2">
     <a type="button" class="btn btn-primary" routerLink="customers/customer/add">new Customer</a>

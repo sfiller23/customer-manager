@@ -1,11 +1,11 @@
 <nav class="row main-nav">
   <span class="col-md-1">
-    <a type="button" class="btn btn-primary" routerLink="customers/{{customerId}}">Customer Details</a>
+    <a type="button" class="btn btn-primary" routerLink="customers/{{customer.id}}">Customer Details</a>
   </span>
   <span class="col-md-1">
-    <a type="button" class="btn btn-primary" routerLink="/customers/order/{{customerId}}">Customer orders</a>
+    <a type="button" class="btn btn-primary" routerLink="order/{{customer.id}}">Customer orders</a>
   </span>
   <span class="col-md-1">
-    <a type="button" class="btn btn-primary" routerLink="edit/{{customerId}}">Edit customer</a>
+    <a type="button" class="btn btn-primary" routerLink="edit/{{customer.id}}">Edit customer</a>
   </span>
 </nav>

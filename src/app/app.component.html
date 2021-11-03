@@ -4,10 +4,10 @@
     <app-main-nav></app-main-nav>
 
     <div class="row">
-      <h1>page</h1>
+      <h1>{{page}}</h1>
     </div>
 
-    <app-view-nav></app-view-nav>
+    <app-view-nav  *ngIf="page==='Customers'"></app-view-nav>
 
   </header>
 
@@ -16,5 +16,5 @@
       <router-outlet></router-outlet>
     </div>
   </main>
-  <footer><a routerLink='customers'>View All custumers</a></footer>
+  <footer><a *ngIf="page!=='Customers'" routerLink='customers'>View All custumers</a></footer>
 </div>

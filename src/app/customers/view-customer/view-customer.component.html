@@ -1,10 +1,13 @@
 <div>
-  <span><img src="" alt=""></span>
-  <span>name</span>
-  <span>address</span>
-  <span>city</span>
-  <span>countery</span>
+  <span>
+    <img *ngIf="customer.gender=='male'" id="customer_img" src="assets/images/male.png" alt="">
+    <img *ngIf="customer.gender=='female'" id="customer_img" src="assets/images/female.png" alt="">
+  </span>
+  <h3>{{customer.firstName}} {{customer.lastName}}</h3>
   <ul>
-    <li>orders</li>
+    <li>gender: {{customer.gender}}</li>
+    <li>country: {{customer.country}}</li>
+    <li>city: {{customer.city}}</li>
+    <li>address: {{customer.address}}</li>
   </ul>
 </div>

@@ -9,15 +9,20 @@ import { EditCustomerComponent } from './customers/edit-customer/edit-customer.c
 import { ViewCustomerComponent } from './customers/view-customer/view-customer.component';
 import { OrderResolver } from './resolvers/order.resolver';
 import { CustomerResolver } from './resolvers/customer.resolver';
+import { PageNameResolver } from './resolvers/page-name.resolver';
 
 const routes: Routes = [
   {path: '', redirectTo:'customers', pathMatch: 'full'},
-  {path: 'customers',component:CustomerCardComponent,},
+  {path: 'customers',component:CustomerCardComponent,
+    resolve: {
+      pageName: PageNameResolver,
+    }
+  },
   {
     path: 'customers/customer', component: CustomersComponent,
-    // resolve:{
-    //     customer: CustomerResolver,
-    // },
+    resolve: {
+      pageName: PageNameResolver,
+    },
     children: [
       {path: 'add', component:AddCustomerComponent},
       {path: 'edit/:id', component:EditCustomerComponent,
@@ -26,16 +31,22 @@ const routes: Routes = [
         }
       },
       {path: 'view/:id', component:ViewCustomerComponent},
+      {path: 'order/:id', component:ViewOrdersComponent,
+      resolve:{
+        order: OrderResolver,
+        customer: CustomerResolver,
+       }
+      },
 
     ]
 
   },
-  {path: 'customers/orders', component:OrdersComponent},
-  {path: 'customers/order/:id', component:ViewOrdersComponent,
-    resolve:{
-      order: OrderResolver
+  {path: 'customers/orders', component:OrdersComponent,
+    resolve: {
+      pageName: PageNameResolver,
     }
   },
+
   //{path: 'customers/customer', loadChildren: () => import('./customers/customers.module').then(m => m.CustomersModule)},
 
 ];

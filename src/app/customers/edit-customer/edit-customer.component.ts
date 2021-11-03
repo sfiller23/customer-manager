@@ -10,6 +10,7 @@ import { OrdersService } from '../../services/orders.service';
 import { Product } from 'src/app/interfaces/product';
 import { Subscription } from 'rxjs';
 import { first } from 'rxjs/operators';
+import { CustomerDetailsServiceService } from '../../services/customer-details-service.service';
 
 @Component({
   selector: 'app-edit-customer',
@@ -17,8 +18,6 @@ import { first } from 'rxjs/operators';
   styleUrls: ['./edit-customer.component.css']
 })
 export class EditCustomerComponent implements OnInit, OnDestroy {
-
-  @Output('outputId') outputId: EventEmitter<{id:any}> = new EventEmitter<{id:any}>();
 
   editForm: FormGroup;
   customer: Customer;
@@ -30,7 +29,7 @@ export class EditCustomerComponent implements OnInit, OnDestroy {
               private customersService: CustomersService,
               private route: ActivatedRoute,
               public productsService: ProductsService,
-              private httpService: HttpService,
+              private customerDetailsService: CustomerDetailsServiceService,
               private router: Router,
               ) {
 
@@ -52,6 +51,7 @@ export class EditCustomerComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.productsService.initProducts();
+    this.customerDetailsService.initCustomer(this.customer);
 
     this.subscription = this.customersService.customers$.subscribe(()=>{
       this.productsService.getProducts(this.customer.products).pipe(first()).subscribe(products=>{
@@ -60,7 +60,7 @@ export class EditCustomerComponent implements OnInit, OnDestroy {
     })
     console.log(this.customer.id, 'editcomponent')
 
-    this.outputId.emit({id:this.customer.id});
+    // this.outputId.emit({id:this.customer.id});
   }
 
   deleteProduct(id: string){

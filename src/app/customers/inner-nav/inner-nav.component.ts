@@ -9,14 +9,13 @@ import { Customer } from '../../interfaces/customer';
 })
 export class InnerNavComponent implements OnInit {
 
-  @Input() customerId: string = '';
+  @Input() customer: any;
 
   constructor(private route: ActivatedRoute) {
 
   }
 
   ngOnInit(): void {
-    console.log(this.customerId,"innerNav");
 
   }
 

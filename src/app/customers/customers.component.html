@@ -1,5 +1,5 @@
 
-  <app-inner-nav [customerId]="customerId" (outputId)="getId()"></app-inner-nav>
+  <app-inner-nav *ngIf="customer.id!==''" [customer]="customer"></app-inner-nav>
 
 
   <router-outlet></router-outlet>
