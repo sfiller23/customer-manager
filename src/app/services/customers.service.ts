@@ -76,6 +76,13 @@ export class CustomersService {
     return this.httpService.getItem('customers',id);
   }
 
+  deleteCustomer(id: string): void{
+    const currentCustomers: Customer[] = this.customersSubject.value;
+    let updatedCustomers = currentCustomers.filter(customer=>customer.id!==id);
+    this.customersSubject.next(updatedCustomers);
+    this.httpService.deleteItem('customers',id).subscribe();
+  }
+
   removeProduct(customerId: any, productId: string): void{
     let currentCustomers: Customer[] = this.customersSubject.value;
     let currentCustomer: any = currentCustomers.find(customer=>customer.id===customerId);
