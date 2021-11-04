@@ -48,10 +48,11 @@ export class CustomersService {
     console.log("customer Added");
   }
 
-  editCustomer(newCustomerDetails: Customer, id: string){
+  editCustomer(newCustomerDetails: Customer){
     let currentCustomers: Customer[] = this.customersSubject.value;
+    console.log(currentCustomers, 'in customer service');
 
-    let updatedCustomer = currentCustomers.find(customer=>customer.id===id);
+    let updatedCustomer = currentCustomers.find(customer=>customer.id===newCustomerDetails.id);
 
     let indexOfUpdatedCustomer: number = 0;
 
@@ -63,7 +64,9 @@ export class CustomersService {
 
     this.customersSubject.next(currentCustomers);
 
-    this.httpService.edit('customers',newCustomerDetails,id).subscribe();
+    if(newCustomerDetails.id){
+      this.httpService.edit('customers',newCustomerDetails,newCustomerDetails.id).subscribe();
+    }
 
   }
 

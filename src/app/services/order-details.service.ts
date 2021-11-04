@@ -22,12 +22,12 @@ export class OrderDetailsService {
   private orderDetailsSubject = new BehaviorSubject<OrderDetails>(this.currentOrderDetalis);
   orderDetails$: Observable<OrderDetails> = this.orderDetailsSubject.asObservable();
 
-  constructor(private customerService: CustomersService, private orderService: OrdersService, private productService: ProductsService) {
+  constructor(private customerService: CustomersService, private ordersService: OrdersService, private productService: ProductsService) {
 
   }
 
   setOrderDetailsByCustomerId(id: string): void{
-    this.orderService.getAllOrders().subscribe(orders=>{
+    this.ordersService.getAllOrders().subscribe(orders=>{
       console.log(orders, "orders");
       const currentOrder: any = orders.find(order=>order.customerId===id);
       console.log(currentOrder, "in details service");
@@ -51,5 +51,22 @@ export class OrderDetailsService {
       }
     })
 
+  }
+
+  updateOrderByCustomerId(customerId: string, products: string[]){
+    this.ordersService.getAllOrders().subscribe(orders=>{
+      let customerOrder = orders.find(order=>order.customerId===customerId);
+      if(customerOrder){
+        customerOrder.products = products;
+        this.ordersService.orderTotalSum(products).subscribe(totalSum=>{
+          if(customerOrder){
+            customerOrder.totalSum = totalSum;
+            if(customerOrder.id){
+              this.ordersService.editOrder(customerOrder);
+            }
+          }
+        })
+      }
+    });
   }
 }

@@ -10,6 +10,7 @@ import { OrdersService } from '../../services/orders.service';
 import { Product } from 'src/app/interfaces/product';
 import { Subscription } from 'rxjs';
 import { first } from 'rxjs/operators';
+import { OrderDetailsService } from '../../services/order-details.service';
 import { CustomerDetailsServiceService } from '../../services/customer-details-service.service';
 
 @Component({
@@ -30,6 +31,7 @@ export class EditCustomerComponent implements OnInit, OnDestroy {
               private route: ActivatedRoute,
               public productsService: ProductsService,
               private customerDetailsService: CustomerDetailsServiceService,
+              private orderDetailsService: OrderDetailsService,
               private router: Router,
               ) {
 
@@ -92,6 +94,7 @@ export class EditCustomerComponent implements OnInit, OnDestroy {
 
 
     const updatedCustomer: Customer = {
+      id: this.customer.id,
       firstName: firstName,
       lastName: lastName,
       gender: gender,
@@ -102,7 +105,8 @@ export class EditCustomerComponent implements OnInit, OnDestroy {
     }
     if(this.customer.id){
       console.log("id exists");
-      this.customersService.editCustomer(updatedCustomer, this.customer.id);
+      this.customersService.editCustomer(updatedCustomer);
+      this.orderDetailsService.updateOrderByCustomerId(this.customer.id, updatedProducts);
       this.router.navigateByUrl('customers');
     }
 

@@ -54,15 +54,19 @@ export class OrdersService {
 
   }
 
-  editOrder(newOrderDetails: Order, id: string){
+  editOrder(newOrderDetails: Order){
     const currentOrders: Order[] = this.ordersSubject.value;
-    currentOrders.forEach(order=>{
-      if(order.id = id){
-        order = newOrderDetails;
-      }
-    })
+    let oldOrder = currentOrders.find(order=>order.id===newOrderDetails.id);
+    let indexOforder: number = 0;
+    if(oldOrder){
+      indexOforder = currentOrders.indexOf(oldOrder);
+    }
+    currentOrders[indexOforder] = newOrderDetails;
     this.ordersSubject.next(currentOrders);
-    this.httpService.edit('orders',newOrderDetails,id).subscribe();
+    if(newOrderDetails.id){
+      this.httpService.edit('orders',newOrderDetails,newOrderDetails.id).subscribe();
+    }
+
   }
 
   getOrder(id: string): Observable<Order | undefined>{
@@ -78,7 +82,7 @@ export class OrdersService {
     }
   }
 
-  private orderTotalSum(ids: string[]): Observable<number>{
+  orderTotalSum(ids: string[]): Observable<number>{
     let totalSum: number = 0;
     return this.productService.getProducts(ids).pipe(map(products=>{
       products.forEach(products=>{

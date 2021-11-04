@@ -1,6 +1,6 @@
 <div class="row">
   <ng-container *ngIf="pageView==='card'">
-  <div *ngFor="let customer of this.customerService.customers$ | async" id="customer_card" class="col-md-2">
+  <div *ngFor="let customer of this.customerService.customers$ | async | searchFilter: query;" id="customer_card" class="col-md-2">
 
       <div class="row">
         <span class=col-md-6><h2><a routerLink="customer/view/{{customer.id}}">name: {{customer.firstName}} {{customer.lastName}}</a></h2></span>
@@ -21,18 +21,18 @@
     </div>
     </ng-container>
     <ng-container *ngIf="pageView==='list'">
-        <table>
+        <table #table>
           <tr>
             <th></th>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Address</th>
-            <th>City</th>
-            <th>Country</th>
-            <th>Order Total</th>
+            <th><button (click)="setSortingBy('firstName')" class="sortButton" type="button">First Name</button></th>
+            <th><button (click)="setSortingBy('lastName')" class="sortButton" >Last Name</button></th>
+            <th><button (click)="setSortingBy('address')" class="sortButton" type="button">Address</button></th>
+            <th><button (click)="setSortingBy('city')" class="sortButton" type="button">City</button></th>
+            <th><button (click)="setSortingBy('country')" class="sortButton" type="button">Country</button></th>
+            <th><button (click)="setSortingBy('totalSum')" class="sortButton" type="button">Order Total</button></th>
             <th></th>
           </tr>
-          <tr *ngFor="let customer of this.customerService.customers$ | async">
+          <tr *ngFor="let customer of this.customerService.customers$ | async | searchFilter: query | sort: sortBy; let i = index">
             <td>
               <img *ngIf="customer.gender=='male'" id="customer_img" src="assets/images/male.png" alt="">
               <img *ngIf="customer.gender=='female'" id="customer_img" src="assets/images/female.png" alt="">
@@ -42,7 +42,8 @@
             <td>{{customer.address}}</td>
             <td>{{customer.city}}</td>
             <td>{{customer.country}}</td>
-            <td>totalOrder</td>
+            <td *ngIf="customer.id">{{totalSums.get(customer.id) | currency}}</td>
+            <td><a routerLink="customer/order/{{customer.id}}">View Orders</a></td>
           </tr>
         </table>
     </ng-container>

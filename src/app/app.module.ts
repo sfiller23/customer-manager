@@ -14,7 +14,9 @@ import { AddCustomerComponent } from './customers/add-customer/add-customer.comp
 import { EditCustomerComponent } from './customers/edit-customer/edit-customer.component';
 import { InnerNavComponent } from './customers/inner-nav/inner-nav.component';
 import { ViewCustomerComponent } from './customers/view-customer/view-customer.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { SearchFilterPipe } from './pipes/search-filter.pipe';
+import { SortPipe } from './pipes/sort.pipe';
 
 @NgModule({
   declarations: [
@@ -29,12 +31,15 @@ import { ReactiveFormsModule } from '@angular/forms';
     EditCustomerComponent,
     ViewCustomerComponent,
     InnerNavComponent,
+    SearchFilterPipe,
+    SortPipe,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     ReactiveFormsModule,
+    FormsModule,
   ],
   exports:[
     EditCustomerComponent

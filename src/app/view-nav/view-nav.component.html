@@ -10,8 +10,12 @@
   </span>
   <div class="col-md-6">
     <div class="row">
-      <span class="col-md-2"><h4>filter:</h4></span>
-      <span class="col-md-2"><input type="text"></span>
+      <h4><label for="customers">Find By Name:</label></h4>
+      <input #searchInput (input)=setQuery(searchInput.value) list="customers-list" id="customers" name="customers" />
+
+      <datalist id="customers-list">
+          <option *ngFor="let customer of this.customersService.customers$ | async" value="{{customer.firstName}} {{customer.lastName}}">
+      </datalist>
     </div>
   </div>
 </nav>
