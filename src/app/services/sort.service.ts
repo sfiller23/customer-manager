@@ -6,12 +6,12 @@ import { BehaviorSubject, Observable } from 'rxjs';
 })
 export class SortService {
 
-  private sortSubject = new BehaviorSubject<string>('');
-  sort$: Observable<string> = this.sortSubject.asObservable();
+  private sortSubject = new BehaviorSubject<string[]>([]);
+  sort$: Observable<string[]> = this.sortSubject.asObservable();
 
   constructor() { }
 
-  setSorting(sortBy: string){
+  setSorting(sortBy: string[]){
     this.sortSubject.next(sortBy);
   }
 }

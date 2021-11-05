@@ -23,7 +23,9 @@ export class CustomerCardComponent implements OnInit, OnDestroy, AfterViewInit {
 
   query: any;
 
-  sortBy: any;
+  sortBy: any[] = ['DCN'];
+
+  sortBySubscription: Subscription = new Subscription();
 
   @ViewChildren('tableRef') tableRef: QueryList<ElementRef> = new QueryList();
 
@@ -40,11 +42,12 @@ export class CustomerCardComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.searchService.query$.subscribe(query=>{
       this.query = query;
-    })
+    });
 
-    this.sortService.sort$.subscribe(sortBy=>{
+    this.sortBySubscription = this.sortService.sort$.subscribe(sortBy=>{
+      console.log(sortBy);
       this.sortBy = sortBy;
-    })
+    });
 
   })
 
@@ -65,7 +68,15 @@ export class CustomerCardComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   setSortingBy(sortBy: string){
-    this.sortService.setSorting(sortBy);
+
+    if(this.sortBy[0]==='DCN'){
+      this.sortBy[0]='ACN';
+    }else{
+      this.sortBy[0]='DCN';
+    }
+    this.sortBy[1] = sortBy;
+    this.sortService.setSorting(this.sortBy);
+
 
   }
 
@@ -77,6 +88,7 @@ export class CustomerCardComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnDestroy(): void{
     this.subscription.unsubscribe();
+    this.sortBySubscription.unsubscribe();
   }
 
 }
