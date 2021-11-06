@@ -16,7 +16,8 @@ export class ViewOrdersComponent implements OnInit, OnDestroy {
   orderDetails: OrderDetails = {
     firstName: '',
     lastName: '',
-    products: new Map<string,number>(),
+    products: [],
+    totalQuantity: 0,
     totalSum: 0,
   };
 

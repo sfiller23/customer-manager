@@ -1,7 +1,6 @@
 import { AfterViewChecked, AfterViewInit, Component, OnInit, ViewChild, OnDestroy, DoCheck, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Customer } from '../interfaces/customer';
-import { EditCustomerComponent } from './edit-customer/edit-customer.component';
 import { CustomerDetailsServiceService } from '../services/customer-details-service.service';
 import { Subscription } from 'rxjs';
 import { PageService } from '../services/page.service';

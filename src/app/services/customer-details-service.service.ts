@@ -17,7 +17,6 @@ export class CustomerDetailsServiceService {
     country: '',
     city: '',
     address: '',
-    products: [],
   }
 
   private customerSubject = new BehaviorSubject<Customer>(this.currentCustomer);

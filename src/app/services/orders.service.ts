@@ -7,14 +7,16 @@ import { HttpService } from './http.service';
 import { ProductsService } from './products.service';
 import { OrderDetails } from '../interfaces/orderDetails';
 import { CustomersService } from './customers.service';
+import { provideRoutes } from '@angular/router';
+import { Customer } from '../interfaces/customer';
 
 @Injectable({
   providedIn: 'root'
 })
 export class OrdersService {
 
-  private ordersSubject = new BehaviorSubject<Order[]>([]);
-  orders$: Observable<Order[]> = this.ordersSubject.asObservable();
+  private ordersSubject = new BehaviorSubject<Partial<Order>[]>([]);
+  orders$: Observable<Partial<Order>[]> = this.ordersSubject.asObservable();
 
   constructor(private httpService: HttpService, private productService: ProductsService) {
     this.initOrders();
@@ -28,7 +30,7 @@ export class OrdersService {
     }
   }
 
-  getAllOrders(): Observable<Order[]>{
+  getAllOrders(): Observable<Partial<Order>[]>{
     if(this.ordersSubject.value.length!==0){
       console.log(this.ordersSubject.value.length, 'length');
       return of(this.ordersSubject.value);
@@ -37,25 +39,47 @@ export class OrdersService {
     }
   }
 
-  addOrder(order: Order){
-    let newOrder: Order;
-    this.orderTotalSum(order.products).subscribe(totalSum=>{
-      order.totalSum = totalSum;
-      newOrder = order;
-      let currentOrders: Order[] = this.ordersSubject.value;
-      currentOrders.unshift(newOrder);
-      this.ordersSubject.next(currentOrders);
-      this.httpService.add('orders',order).subscribe(res=>{
-        currentOrders = this.ordersSubject.value;
-        currentOrders[0].id = res.name;
+  addOrder(order: Partial<Order>){
+    if(order.products){
+      this.orderTotalSum(order.products).subscribe(totalSum=>{
+        order.totalSum = totalSum;
+        let currentOrders: Partial<Order>[] = this.ordersSubject.value;
+        currentOrders.unshift(order);
         this.ordersSubject.next(currentOrders);
+        let productsIdsArr: string[] = [];
+        let productsQuantityArr: number[] = [];
+        if(order.products){
+          for(let id of order.products.keys()){
+            productsIdsArr.push(id);
+          }
+          console.log(productsIdsArr);
+          let totalQuantity = 0;
+          for(let quantity of order.products.values()){
+            totalQuantity += +quantity;
+            productsQuantityArr.push(+quantity);
+          }
+          order.totalQuantity = totalQuantity;
+        }
+        const convertedOrderObj = {
+          customerId: order.customerId,
+          productsIds: productsIdsArr,
+          productsQuantity: productsQuantityArr,
+          totalQuantity: order.totalQuantity,
+          totalSum: order.totalSum,
+        }
+        this.httpService.add('orders',convertedOrderObj).subscribe(res=>{
+          currentOrders = this.ordersSubject.value;
+          currentOrders[0].id = res.name;
+          this.ordersSubject.next(currentOrders);
+        })
       })
-    })
+    }
+
 
   }
 
   editOrder(newOrderDetails: Order){
-    const currentOrders: Order[] = this.ordersSubject.value;
+    const currentOrders: Partial<Order>[] = this.ordersSubject.value;
     let oldOrder = currentOrders.find(order=>order.id===newOrderDetails.id);
     let indexOforder: number = 0;
     if(oldOrder){
@@ -69,24 +93,48 @@ export class OrdersService {
 
   }
 
-  getOrder(id: string): Observable<Order | undefined>{
-    if(this.ordersSubject.value){
-      const currentOrders: Order[] = this.ordersSubject.value;
-      const currentOrder: Order | undefined = currentOrders.find(order=>order.id===id);
+  deleteOrder(id: string){
+    let currentOrders = this.ordersSubject.value;
+    let updatedOrders = currentOrders.filter(order=>order.id!==id);
+    this.ordersSubject.next(updatedOrders);
+    this.httpService.deleteItem('orders', id).subscribe();
+  }
+
+  getOrder(id: string): Observable<Partial<Order> | undefined>{
+    if(this.ordersSubject.value.length!==0){
+      const currentOrders: Partial<Order>[] = this.ordersSubject.value;
+      const currentOrder: Partial<Order> | undefined = currentOrders.find(order=>order.id===id);
       return of(currentOrder);
     }else{
-       return this.httpService.getItem('orders', id).pipe(map(res=>{
-         const currentOrder: Order = {...res};
+       return this.httpService.getItem('orders', id).pipe(map(order=>{
+         const productsMap: Map<string,number> = new Map<string,number>();
+         let currentOrder: Partial<Order> = {
+           id: order.id,
+           customerId: order.customerId,
+           totalQuantity: order.totalQuantity,
+           totalSum: order.totalSum,
+         }
+         for(let i = 0; i<order.productsIds.length; i++){
+          productsMap.set(order.productsIds[i],order.productsQuantity[i]);
+         }
+         currentOrder.products = productsMap;
          return currentOrder;
        }));
     }
   }
 
-  orderTotalSum(ids: string[]): Observable<number>{
+  orderTotalSum(productsMap: Map<string,number>): Observable<number>{
     let totalSum: number = 0;
-    return this.productService.getProducts(ids).pipe(map(products=>{
-      products.forEach(products=>{
-        totalSum += products.price;
+    let producsIds: string[] = [];
+    for(let key in productsMap.keys){
+      producsIds.push(key);
+    }
+    return this.productService.getProducts(producsIds).pipe(map(products=>{
+      products.forEach(product=>{
+        let quantity = productsMap.get(product.id);
+        if(quantity){
+          totalSum += product.price*quantity;
+        }
       })
       return totalSum;
     }))

@@ -1,0 +1,29 @@
+<div *ngIf="orderDetails.totalSum!==0" class="row">
+  <h4>{{orderDetails.firstName}} {{orderDetails.lastName}}</h4>
+  <table>
+      <tr>
+        <th>Product Name</th>
+        <th>Product Quantity</th>
+        <th>Product Price</th>
+      </tr>
+    <tr *ngFor="let product of orderDetails.products">
+      <td>{{product.name}}</td>
+      <td>{{product.quantity}}</td>
+      <td>{{product.price | currency}}</td>
+    </tr>
+    <hr style="width: 250%;">
+    <tr>
+      <td>Total</td>
+      <td>{{orderDetails.totalQuantity}}</td>
+      <td>{{orderDetails.totalSum | currency}}</td>
+    </tr>
+  </table>
+  <!-- <ol class="list-group list-group-flush">
+    <li *ngFor="let product of orderDetails.products" class="list-group-item">
+      {{product.name}}  {{product.price}}  {{product.quantity}}
+    </li>
+    <li id="totalSum" class="list-group-item">TotalSum: {{orderDetails.totalSum | currency}}</li>
+  </ol> -->
+
+</div>
+

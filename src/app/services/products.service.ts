@@ -36,10 +36,10 @@ export class ProductsService {
   }
 
   deleteProduct(productId: string, customer: Customer){
-    const currentProducts: string[] = customer.products;
-    let updatedProducts: string[] = currentProducts.filter(id=>id!==productId);
-    console.log(updatedProducts);
-    this.httpService.updateItem("customers",customer.id,"products",updatedProducts).subscribe();
+    // const currentProducts: string[] = customer.products;
+    // let updatedProducts: string[] = currentProducts.filter(id=>id!==productId);
+    // console.log(updatedProducts);
+    // this.httpService.updateItem("customers",customer.id,"products",updatedProducts).subscribe();
 
   }
 

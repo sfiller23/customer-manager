@@ -1,9 +1,9 @@
 <div *ngIf="orderDetails.totalSum!==0" class="row">
   <h4>{{orderDetails.firstName}} {{orderDetails.lastName}}</h4>
   <ol class="list-group list-group-flush">
-    <li *ngFor="let product of orderDetails.products | keyvalue" class="list-group-item">
+    <!-- <li *ngFor="let product of orderDetails.products | keyvalue" class="list-group-item">
       {{product.key}}  {{product.value | currency}}
-    </li>
+    </li> -->
     <li id="totalSum" class="list-group-item">TotalSum: {{orderDetails.totalSum | currency}}</li>
   </ol>
 

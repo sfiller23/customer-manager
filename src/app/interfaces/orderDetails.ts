@@ -1,6 +1,10 @@
+import { OrderView } from './orderView';
+
+
 export interface OrderDetails{
   firstName: string,
   lastName: string,
-  products: Map<string,number>;
+  products: OrderView[];
+  totalQuantity: number;
   totalSum: number;
 }

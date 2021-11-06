@@ -10,13 +10,13 @@ import { CustomerCardComponent } from './customers/customer-card/customer-card.c
 import { HttpClientModule } from '@angular/common/http';
 import { MainNavComponent } from './main-nav/main-nav.component';
 import { CustomersComponent } from './customers/customers.component';
-import { AddCustomerComponent } from './customers/add-customer/add-customer.component';
-import { EditCustomerComponent } from './customers/edit-customer/edit-customer.component';
 import { InnerNavComponent } from './customers/inner-nav/inner-nav.component';
 import { ViewCustomerComponent } from './customers/view-customer/view-customer.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SearchFilterPipe } from './pipes/search-filter.pipe';
 import { SortPipe } from './pipes/sort.pipe';
+import { UpdateCustomerComponent } from './customers/update-customer/update-customer.component';
+import { ViewOrderComponent } from './orders/view-order/view-order.component';
 
 @NgModule({
   declarations: [
@@ -27,12 +27,12 @@ import { SortPipe } from './pipes/sort.pipe';
     MainNavComponent,
     CustomersComponent,
     CustomerCardComponent,
-    AddCustomerComponent,
-    EditCustomerComponent,
+    UpdateCustomerComponent,
     ViewCustomerComponent,
     InnerNavComponent,
     SearchFilterPipe,
     SortPipe,
+    ViewOrderComponent,
   ],
   imports: [
     BrowserModule,
@@ -40,9 +40,6 @@ import { SortPipe } from './pipes/sort.pipe';
     HttpClientModule,
     ReactiveFormsModule,
     FormsModule,
-  ],
-  exports:[
-    EditCustomerComponent
   ],
   providers: [],
   bootstrap: [AppComponent]

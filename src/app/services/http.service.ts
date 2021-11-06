@@ -18,6 +18,7 @@ export class HttpService {
   getAll(model:string){
     return this.http.get(`${environment.API_END_POINT}/${model}.json`).pipe(map(res=>this.genaralService.apiObjectToArray(res)));
   }
+
   add(model:string, data: any){
     return this.http.post<{name:string}>(`${environment.API_END_POINT}/${model}.json`,data);
   }

@@ -1,9 +1,9 @@
 <div class="row" *ngFor="let order of this.ordersPageSubject$ | async">
   <h4>{{order.firstName}} {{order.lastName}}</h4>
   <ol class="list-group list-group-flush">
-    <li *ngFor="let product of order.products | keyvalue" class="list-group-item">
+    <!-- <li *ngFor="let product of order.products | keyvalue" class="list-group-item">
       {{product.key}}  {{product.value | currency}}
-    </li>
+    </li> -->
     <li id="totalSum" class="list-group-item">TotalSum: {{order.totalSum | currency}}</li>
   </ol>
 

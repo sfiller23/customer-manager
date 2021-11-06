@@ -29,7 +29,7 @@ export class ViewNavComponent implements OnInit, OnDestroy {
     })
 
     this.customersService.customers$.subscribe(customers=>{
-      this.customers = customers;
+      //this.customers = customers;
     })
 
   }

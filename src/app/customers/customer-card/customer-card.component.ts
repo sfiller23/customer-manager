@@ -52,13 +52,13 @@ export class CustomerCardComponent implements OnInit, OnDestroy, AfterViewInit {
   })
 
     this.customerService.customers$.subscribe(customers=>{
-      customers.forEach(customer=>{
-        this.subscription = this.ordersService.orderTotalSum(customer.products).subscribe(totalSum=>{
-          if(customer.id){
-            this.totalSums.set(customer.id,totalSum);
-          }
-        })
-      })
+      // customers.forEach(customer=>{
+      //   this.subscription = this.ordersService.orderTotalSum(customer.products).subscribe(totalSum=>{
+      //     if(customer.id){
+      //       this.totalSums.set(customer.id,totalSum);
+      //     }
+      //   })
+      // })
     })
 
   }

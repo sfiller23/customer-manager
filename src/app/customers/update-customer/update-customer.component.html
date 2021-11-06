@@ -32,17 +32,24 @@
     <span for="address">Addrres</span>
     <input class="form-control" id="address" placeholder="" type="text" formControlName="address">
   </div>
-  <div class="form-group">
-
+  <div *ngIf="customer" class="form-group">
+    <h3>Current Orders</h3>
+    <ol>
+      <li *ngFor="let order of orders">
+        <a routerLink="/customers/customer/order/{{order.id}}">{{order.id}}</a>
+        <span>Total sum: {{order.totalSum | currency}}</span>
+        <button *ngIf="order.id" (click)=deleteOrder(order.id) type="button" class="btn btn-outline-danger"><i class="bi bi-trash"></i></button>
+      </li>
+    </ol>
   </div>
   <div class="form-group">
     <span for="products"><h3>Add Products:</h3></span>
     <ng-container *ngFor="let product of this.productsService.products$ | async; let i = index">
       <div *ngIf="i!==0" class="form-check">
 
-        <input class="form-check-input" #productsBoxInput (click)="onToggleBox(productsBoxInput, product.id, quantityInput)" type="checkbox" value="products" id="{{product.name}}">
+        <input class="form-check-input" #productsBoxInput (click)="onToggleBox(product.id, quantityInput)" type="checkbox" value="{{product.id}}" id="{{product.name}}">
         <label class="form-check-label" for="{{product.name}}"><span>{{i}}. {{product.name}}: {{product.price | currency}}</span></label>
-        <input style="display:none" min=1 value=1 #quantityInput type="number">
+        <input (input)="setQuantity(quantityInput.value, product.id)" style="display:none" min=1 value=1 #quantityInput type="number">
 
       </div>
     </ng-container>

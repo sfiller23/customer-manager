@@ -14,8 +14,8 @@ import { Router } from '@angular/router';
 })
 export class CustomersService {
 
-  private customersSubject = new BehaviorSubject<Customer[]>([]);
-  customers$: Observable<Customer[]> = this.customersSubject.asObservable();
+  private customersSubject = new BehaviorSubject<Partial<Customer>[]>([]);
+  customers$: Observable<Partial<Customer>[]> = this.customersSubject.asObservable();
 
   constructor(private router:Router, private httpService: HttpService, private ordersService: OrdersService) {
     this.initCustomers();
@@ -29,27 +29,22 @@ export class CustomersService {
     }
   }
 
-  addCustomer(customer: Customer){
-    let newCustomer: Customer;
-    newCustomer = {...customer};
-    let currentCustomers: Customer[] = this.customersSubject.value;
-    currentCustomers.unshift(newCustomer);
+  addCustomer(customer: Partial<Customer>, order: Partial<Order>){
+    let currentCustomers: Partial<Customer>[] = this.customersSubject.value;
+    currentCustomers.unshift(customer);
     this.customersSubject.next(currentCustomers);
     this.httpService.add('customers',customer).subscribe(res=>{
       currentCustomers = this.customersSubject.value;
       currentCustomers[0].id = res.name;
       this.customersSubject.next(currentCustomers);
-      const newOrder: Order = {
-        customerId: res.name,
-        products: customer.products,
-      }
-      this.ordersService.addOrder(newOrder);
+      order.customerId = res.name;
+      this.ordersService.addOrder(order);
     })
     console.log("customer Added");
   }
 
   editCustomer(newCustomerDetails: Customer){
-    let currentCustomers: Customer[] = this.customersSubject.value;
+    let currentCustomers: Partial<Customer>[] = this.customersSubject.value;
     console.log(currentCustomers, 'in customer service');
 
     let updatedCustomer = currentCustomers.find(customer=>customer.id===newCustomerDetails.id);
@@ -71,7 +66,7 @@ export class CustomersService {
   }
 
   getCustomer(id: string): Observable<Customer>{
-    let currentCustomers: Customer[] = this.customersSubject.value;
+    let currentCustomers: Partial<Customer>[] = this.customersSubject.value;
     let cuurentCustomer: any = currentCustomers.find(customer=>customer.id===id);
     if(cuurentCustomer){
       return of(cuurentCustomer);
@@ -80,14 +75,14 @@ export class CustomersService {
   }
 
   deleteCustomer(id: string): void{
-    const currentCustomers: Customer[] = this.customersSubject.value;
+    const currentCustomers: Partial<Customer>[] = this.customersSubject.value;
     let updatedCustomers = currentCustomers.filter(customer=>customer.id!==id);
     this.customersSubject.next(updatedCustomers);
     this.httpService.deleteItem('customers',id).subscribe();
   }
 
   removeProduct(customerId: any, productId: string): void{
-    let currentCustomers: Customer[] = this.customersSubject.value;
+    let currentCustomers: Partial<Customer>[] = this.customersSubject.value;
     let currentCustomer: any = currentCustomers.find(customer=>customer.id===customerId);
     const currentCustomerProducts: string[] = currentCustomer.products;
     let updatedProducts = currentCustomerProducts.filter(id=>id!==productId);

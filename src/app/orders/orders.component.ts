@@ -26,25 +26,25 @@ export class OrdersComponent implements OnInit, OnDestroy {
     let orderPageItems: OrderDetails[] = [];
     this.subscription = this.ordersService.orders$.subscribe(currentOrders=>{
       currentOrders.forEach(order=>{
-        this.customersService.getCustomer(order.customerId).subscribe(customer=>{
-          const currentOrder: OrderDetails = {
-            firstName: customer.firstName,
-            lastName: customer.lastName,
-            products: new Map<string,number>(),
-            totalSum: -1,
-          };
-          if(order.totalSum){
-            currentOrder.totalSum = order.totalSum
-          };
-          this.productsService.getProducts(order.products).subscribe(products=>{
-            products.forEach(product=>{
-              currentOrder.products.set(product.name,product.price);
-            });
-            orderPageItems.push(currentOrder);
-            this.ordersPageSubject$.next(orderPageItems);
-          });
+        // this.customersService.getCustomer(order.customerId).subscribe(customer=>{
+        //   const currentOrder: OrderDetails = {
+        //     firstName: customer.firstName,
+        //     lastName: customer.lastName,
+        //     products: new Map<string,number>(),
+        //     totalSum: -1,
+        //   };
+        //   if(order.totalSum){
+        //     currentOrder.totalSum = order.totalSum
+        //   };
+        //   // this.productsService.getProducts(order.products).subscribe(products=>{
+        //   //   products.forEach(product=>{
+        //   //     currentOrder.products.set(product.name,product.price);
+        //   //   });
+        //   //   orderPageItems.push(currentOrder);
+        //   //   this.ordersPageSubject$.next(orderPageItems);
+        //   // });
 
-        });
+        // });
 
       });
     })

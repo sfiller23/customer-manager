@@ -1,8 +1,9 @@
 export interface Order{
-  id?: string;
+  id: string;
   customerId: string;
-  products: string[];
-  totalSum?: number;
+  products: Map<string,number>;
+  totalQuantity: number;
+  totalSum: number;
 }
 
 
