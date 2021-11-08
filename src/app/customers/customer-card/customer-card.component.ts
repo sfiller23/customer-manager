@@ -45,20 +45,29 @@ export class CustomerCardComponent implements OnInit, OnDestroy, AfterViewInit {
     });
 
     this.sortBySubscription = this.sortService.sort$.subscribe(sortBy=>{
-      console.log(sortBy);
       this.sortBy = sortBy;
     });
 
   })
 
     this.customerService.customers$.subscribe(customers=>{
-      // customers.forEach(customer=>{
-      //   this.subscription = this.ordersService.orderTotalSum(customer.products).subscribe(totalSum=>{
-      //     if(customer.id){
-      //       this.totalSums.set(customer.id,totalSum);
-      //     }
-      //   })
-      // })
+      customers.forEach(customer=>{
+        let totalSum = 0;
+        this.ordersService.orders$.subscribe(orders=>{
+          orders.forEach(order=>{
+            if(customer.id===order.customerId){
+              if(order.totalSum){
+                totalSum += order.totalSum;
+              }
+
+            }
+          })
+          if(customer.id){
+            this.totalSums.set(customer.id,totalSum);
+          }
+
+        })
+      })
     })
 
   }
@@ -82,7 +91,6 @@ export class CustomerCardComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngAfterViewInit(): void{
     let table = this.tableRef;
-    console.log(table);
 
   }
 

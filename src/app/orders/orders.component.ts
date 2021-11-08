@@ -1,58 +1,105 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewChecked, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { Product } from '../interfaces/product';
 import { CustomersService } from '../services/customers.service';
 import { OrdersService } from '../services/orders.service';
 import { OrderDetails } from '../interfaces/orderDetails';
 import { HttpService } from '../services/http.service';
-import { first } from 'rxjs/operators';
+import { first, map, take, tap, distinct, last } from 'rxjs/operators';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { ProductsService } from '../services/products.service';
-import { CustomerDetailsServiceService } from '../services/customer-details-service.service';
+import { OrderDetailsService } from '../services/order-details.service';
 
 @Component({
   selector: 'app-orders',
   templateUrl: './orders.component.html',
   styleUrls: ['./orders.component.css']
 })
-export class OrdersComponent implements OnInit, OnDestroy {
+export class OrdersComponent implements OnInit, OnDestroy, AfterViewInit, AfterViewChecked {
 
-  ordersPageSubject$ = new BehaviorSubject<OrderDetails[]>([]);
+  ordersPageSubject$ = new BehaviorSubject<Map<string,OrderDetails[]>>(new Map<string,OrderDetails[]>());
 
-  subscription: Subscription = new Subscription();
+  ordersSubscription: Subscription = new Subscription();
 
-  constructor(private customerDetailsService: CustomerDetailsServiceService,private customersService: CustomersService ,public ordersService: OrdersService, private httpService: HttpService, private productsService: ProductsService) { }
+  customersSubscription: Subscription = new Subscription();
+
+  orderDetailsSubscription: Subscription = new Subscription();
+
+  orderMap: Map<string,OrderDetails[]> = new Map<string,OrderDetails[]>();
+
+  ordersLength = 0;
+
+  i = 0;
+
+  constructor(private cdRef : ChangeDetectorRef ,private orderDetailsService: OrderDetailsService,private customersService: CustomersService ,public ordersService: OrdersService, private httpService: HttpService, private productsService: ProductsService) { }
 
   ngOnInit(): void {
-    let orderPageItems: OrderDetails[] = [];
-    this.subscription = this.ordersService.orders$.subscribe(currentOrders=>{
-      currentOrders.forEach(order=>{
-        // this.customersService.getCustomer(order.customerId).subscribe(customer=>{
-        //   const currentOrder: OrderDetails = {
-        //     firstName: customer.firstName,
-        //     lastName: customer.lastName,
-        //     products: new Map<string,number>(),
-        //     totalSum: -1,
-        //   };
-        //   if(order.totalSum){
-        //     currentOrder.totalSum = order.totalSum
-        //   };
-        //   // this.productsService.getProducts(order.products).subscribe(products=>{
-        //   //   products.forEach(product=>{
-        //   //     currentOrder.products.set(product.name,product.price);
-        //   //   });
-        //   //   orderPageItems.push(currentOrder);
-        //   //   this.ordersPageSubject$.next(orderPageItems);
-        //   // });
-
-        // });
+    const set = new Set();
+    this.customersSubscription = this.customersService.customers$.pipe(distinct()).subscribe(customers=>{
+      customers.forEach(customer=>{
+        if(customer.id){
+          if(!this.orderMap.has(customer.id)){
+            this.orderMap.set(customer.id, []);
+          }
+        }
 
       });
-    })
+      console.log(this.orderMap,"finished loop");
+      this.orderDetailsService.orderDetails$.pipe(distinct()).subscribe(orderDetails=>{
+        if(orderDetails.customerId){
+          if(!set.has(orderDetails.orderId)){
+            const currentDetailsArr = this.orderMap.get(orderDetails.customerId);
+            this.orderMap.delete(orderDetails.customerId);;
+            if(currentDetailsArr){
 
+                currentDetailsArr.push(orderDetails);
+                this.orderMap.set(orderDetails.customerId,currentDetailsArr);
+                set.add(orderDetails.orderId);
+                this.i++;
+              }
+
+          }
+
+
+        }
+
+
+      });
+
+    });
+
+
+
+
+
+
+}
+
+  ngAfterViewChecked(){
+    this.cdRef.detectChanges();
+  }
+
+  ngAfterViewInit(){
+    this.ordersSubscription = this.ordersService.orders$.subscribe(currentOrders=>{
+      this.ordersLength = currentOrders.length;
+      if(this.ordersLength>0){
+        currentOrders.forEach(order=>{
+          if(order.id){
+              this.orderDetailsService.setOrderDetails(order.id);
+          }
+        });
+      }
+      if(this.i===this.ordersLength){
+
+        this.ordersPageSubject$.next(this.orderMap);
+      }
+    });
   }
 
   ngOnDestroy(){
-    this.subscription.unsubscribe();
+    console.log("destroy");
+    this.ordersSubscription.unsubscribe();
+    this.customersSubscription.unsubscribe();
+    this.orderDetailsSubscription.unsubscribe();
   }
 
 

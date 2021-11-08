@@ -28,7 +28,6 @@ export class CustomersComponent implements OnInit, OnDestroy, AfterViewChecked{
   ngOnInit(): void {
     this.subscription = this.customerDetailsServiceService.customer$.subscribe(customer=>{
       this.customer = customer;
-      console.log(customer, "im in constomers cimpopopo");
     })
 
 

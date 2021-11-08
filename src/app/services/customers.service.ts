@@ -40,12 +40,10 @@ export class CustomersService {
       order.customerId = res.name;
       this.ordersService.addOrder(order);
     })
-    console.log("customer Added");
   }
 
   editCustomer(newCustomerDetails: Customer){
     let currentCustomers: Partial<Customer>[] = this.customersSubject.value;
-    console.log(currentCustomers, 'in customer service');
 
     let updatedCustomer = currentCustomers.find(customer=>customer.id===newCustomerDetails.id);
 

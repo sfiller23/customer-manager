@@ -1,10 +1,25 @@
-<div class="row" *ngFor="let order of this.ordersPageSubject$ | async">
-  <h4>{{order.firstName}} {{order.lastName}}</h4>
-  <ol class="list-group list-group-flush">
-    <!-- <li *ngFor="let product of order.products | keyvalue" class="list-group-item">
-      {{product.key}}  {{product.value | currency}}
-    </li> -->
-    <li id="totalSum" class="list-group-item">TotalSum: {{order.totalSum | currency}}</li>
-  </ol>
 
-</div>
+  <div style="width: 100%; border: 1px solid black" class="row" *ngFor="let orders of ordersPageSubject$.value | keyvalue; let i = index">
+    <h3 *ngIf="orders.value[0]"><u>{{orders.value[0].firstName}} {{orders.value[0].lastName}}</u></h3>
+    <ng-container *ngFor="let order of orders.value">
+      <h6>Order Id: {{order.orderId}}</h6>
+      <table>
+        <tr>
+          <th>Product Name</th>
+          <th>Product quantity</th>
+          <th>Product price</th>
+        </tr>
+        <tr *ngFor="let item of order.products">
+          <td>{{item.name}}</td>
+          <td>{{item.quantity}}</td>
+          <td>{{item.price | currency}}</td>
+        </tr>
+        <tr>
+          <td>Total</td>
+          <td>{{order.totalQuantity}}</td>
+          <td>{{order.totalSum | currency}}</td>
+        </tr>
+      </table>
+    </ng-container>
+  </div>
+

@@ -15,7 +15,7 @@ export class ViewCustomerComponent implements OnInit {
 
   ngOnInit(): void {
 
-    const customerId = this.route.params.subscribe(params=>{
+    this.route.params.subscribe(params=>{
       this.customersService.getCustomer(params.id).subscribe(customer=>{
         this.customer = customer;
       })

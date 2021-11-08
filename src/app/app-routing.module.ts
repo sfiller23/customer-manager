@@ -31,7 +31,7 @@ const routes: Routes = [
         },
       },
       {path: 'view/:id', component:ViewCustomerComponent},
-      {path: 'orders/:id', component:ViewOrderComponent},
+      {path: 'orders/:id', component:ViewOrdersComponent},
 
     ]
 

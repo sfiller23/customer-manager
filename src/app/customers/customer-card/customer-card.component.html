@@ -45,7 +45,7 @@
             <td>{{customer.city}}</td>
             <td>{{customer.country}}</td>
             <td *ngIf="customer.id">{{totalSums.get(customer.id) | currency}}</td>
-            <td><a routerLink="customer/order/{{customer.id}}">View Orders</a></td>
+            <td><a routerLink="customer/orders/{{customer.id}}">View Orders</a></td>
           </tr>
         </table>
     </ng-container>

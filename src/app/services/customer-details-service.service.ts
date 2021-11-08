@@ -13,6 +13,8 @@ export class CustomerDetailsServiceService {
     id: '',
     firstName: '',
     lastName: '',
+    email: '',
+    phone: '',
     gender: '',
     country: '',
     city: '',

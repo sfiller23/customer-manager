@@ -15,13 +15,11 @@ export class SortPipe implements PipeTransform {
   transform(value: any[], args1: string, args2: string): any {
     if(!value)return null;
     if(!args1)return value;
-    console.log(args1,'from pipe');
     const sumsMap: Map<number, Customer> = new Map<number, Customer>();
     let sumsArr: number[] = [];
 
     switch(args1){
       case 'firstName':
-        console.log(args1,'from pipe2');
         value = value.sort(function (a:Customer, b: Customer) {
           if(args2==='ACN'){
             if (a.firstName > b.firstName) return 1;
@@ -94,11 +92,24 @@ export class SortPipe implements PipeTransform {
         })
         break;
       case 'totalSum':
+        let totalSum = 0;
         value.forEach(customer=>{
-          this.ordersService.orderTotalSum(customer.products).subscribe(totalSum=>{
-            sumsMap.set(totalSum, customer);
-            sumsArr.push(totalSum);
-          });
+          this.ordersService.orders$.subscribe(orders=>{
+            orders.forEach(order=>{
+              if(customer.id===order.customerId){
+                if(order.totalSum){
+                  totalSum += order.totalSum;
+                }
+
+              }
+            })
+            if(customer.id){
+              sumsMap.set(totalSum, customer);
+              sumsArr.push(totalSum);
+            }
+
+          })
+
         });
         sumsArr.sort(function (a: number, b: number) {
           if(args2==='ACN'){
@@ -107,7 +118,6 @@ export class SortPipe implements PipeTransform {
             return b-a;
           }
         });
-        console.log(sumsArr);
 
         let customerOrder: any[] = [];
 

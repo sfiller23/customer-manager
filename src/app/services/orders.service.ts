@@ -24,18 +24,27 @@ export class OrdersService {
 
   initOrders(){
     if(this.ordersSubject.value.length===0){
-      this.httpService.getAll('orders').subscribe(res=>{
-        this.ordersSubject.next(res);
-      })
+      this.httpService.getAll('orders').subscribe(orders=>{
+        const appOrders: Order[] = [];
+        orders.forEach(order=>{
+          appOrders.push(this.fromApiObjToAppObj(order));
+        });
+        this.ordersSubject.next(appOrders);
+      });
     }
   }
 
   getAllOrders(): Observable<Partial<Order>[]>{
     if(this.ordersSubject.value.length!==0){
-      console.log(this.ordersSubject.value.length, 'length');
       return of(this.ordersSubject.value);
     }else{
-      return this.httpService.getAll('orders');
+      return this.httpService.getAll('orders').pipe(map(orders=>{
+        const appOrders: Order[] = [];
+        orders.forEach(order=>{
+          appOrders.push(this.fromApiObjToAppObj(order));
+        });
+        return appOrders;
+      }));
     }
   }
 
@@ -46,27 +55,7 @@ export class OrdersService {
         let currentOrders: Partial<Order>[] = this.ordersSubject.value;
         currentOrders.unshift(order);
         this.ordersSubject.next(currentOrders);
-        let productsIdsArr: string[] = [];
-        let productsQuantityArr: number[] = [];
-        if(order.products){
-          for(let id of order.products.keys()){
-            productsIdsArr.push(id);
-          }
-          console.log(productsIdsArr);
-          let totalQuantity = 0;
-          for(let quantity of order.products.values()){
-            totalQuantity += +quantity;
-            productsQuantityArr.push(+quantity);
-          }
-          order.totalQuantity = totalQuantity;
-        }
-        const convertedOrderObj = {
-          customerId: order.customerId,
-          productsIds: productsIdsArr,
-          productsQuantity: productsQuantityArr,
-          totalQuantity: order.totalQuantity,
-          totalSum: order.totalSum,
-        }
+        const convertedOrderObj = this.fromAppObjToApiObj(order);
         this.httpService.add('orders',convertedOrderObj).subscribe(res=>{
           currentOrders = this.ordersSubject.value;
           currentOrders[0].id = res.name;
@@ -78,20 +67,20 @@ export class OrdersService {
 
   }
 
-  editOrder(newOrderDetails: Order){
-    const currentOrders: Partial<Order>[] = this.ordersSubject.value;
-    let oldOrder = currentOrders.find(order=>order.id===newOrderDetails.id);
-    let indexOforder: number = 0;
-    if(oldOrder){
-      indexOforder = currentOrders.indexOf(oldOrder);
-    }
-    currentOrders[indexOforder] = newOrderDetails;
-    this.ordersSubject.next(currentOrders);
-    if(newOrderDetails.id){
-      this.httpService.edit('orders',newOrderDetails,newOrderDetails.id).subscribe();
-    }
+  // editOrder(newOrderDetails: Order){
+  //   const currentOrders: Partial<Order>[] = this.ordersSubject.value;
+  //   let oldOrder = currentOrders.find(order=>order.id===newOrderDetails.id);
+  //   let indexOforder: number = 0;
+  //   if(oldOrder){
+  //     indexOforder = currentOrders.indexOf(oldOrder);
+  //   }
+  //   currentOrders[indexOforder] = newOrderDetails;
+  //   this.ordersSubject.next(currentOrders);
+  //   if(newOrderDetails.id){
+  //     this.httpService.edit('orders',newOrderDetails,newOrderDetails.id).subscribe();
+  //   }
 
-  }
+  // }
 
   deleteOrder(id: string){
     let currentOrders = this.ordersSubject.value;
@@ -107,18 +96,7 @@ export class OrdersService {
       return of(currentOrder);
     }else{
        return this.httpService.getItem('orders', id).pipe(map(order=>{
-         const productsMap: Map<string,number> = new Map<string,number>();
-         let currentOrder: Partial<Order> = {
-           id: order.id,
-           customerId: order.customerId,
-           totalQuantity: order.totalQuantity,
-           totalSum: order.totalSum,
-         }
-         for(let i = 0; i<order.productsIds.length; i++){
-          productsMap.set(order.productsIds[i],order.productsQuantity[i]);
-         }
-         currentOrder.products = productsMap;
-         return currentOrder;
+        return this.fromApiObjToAppObj(order);
        }));
     }
   }
@@ -139,6 +117,46 @@ export class OrdersService {
       return totalSum;
     }))
 
+  }
+
+  private fromApiObjToAppObj(order: any): Order{
+    const productsMap: Map<string,number> = new Map<string,number>();
+    let currentOrder: Partial<Order> = {
+      id: order.id,
+      customerId: order.customerId,
+      totalQuantity: order.totalQuantity,
+      totalSum: order.totalSum,
+    }
+    for(let i = 0; i<order.productsIds.length; i++){
+     productsMap.set(order.productsIds[i],order.productsQuantity[i]);
+    }
+    currentOrder.products = productsMap;
+    return <Order>currentOrder;
+  }
+
+  private fromAppObjToApiObj(order: any): any{
+    let productsIdsArr: string[] = [];
+    let productsQuantityArr: number[] = [];
+    if(order.products){
+      for(let id of order.products.keys()){
+        productsIdsArr.push(id);
+      }
+      let totalQuantity = 0;
+      for(let quantity of order.products.values()){
+        totalQuantity += +quantity;
+        productsQuantityArr.push(+quantity);
+      }
+      order.totalQuantity = totalQuantity;
+    }
+    const convertedOrderObj = {
+      customerId: order.customerId,
+      productsIds: productsIdsArr,
+      productsQuantity: productsQuantityArr,
+      totalQuantity: order.totalQuantity,
+      totalSum: order.totalSum,
+    }
+
+    return convertedOrderObj;
   }
 
 

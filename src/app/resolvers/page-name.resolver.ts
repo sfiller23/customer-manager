@@ -17,8 +17,6 @@ export class PageNameResolver implements Resolve<boolean> {
   }
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
 
-    console.log(state.url);
-
     const correntPage: string = state.url;
 
     let pageName: string = '';
@@ -37,8 +35,6 @@ export class PageNameResolver implements Resolve<boolean> {
         pageName = 'Customer Information';
         break;
     }
-
-    console.log(pageName, "from resolver");
 
     this.pageService.initPageName(pageName);
 

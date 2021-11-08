@@ -13,15 +13,7 @@ import { OrderView } from '../interfaces/orderView';
 })
 export class OrderDetailsService {
 
-  private currentOrderDetalis: OrderDetails = {
-    firstName: '',
-    lastName: '',
-    products: [],
-    totalQuantity: 0,
-    totalSum: 0,
-  }
-
-  private orderDetailsSubject = new BehaviorSubject<OrderDetails>(this.currentOrderDetalis);
+  private orderDetailsSubject = new BehaviorSubject<OrderDetails>({} as OrderDetails);
   orderDetails$: Observable<OrderDetails> = this.orderDetailsSubject.asObservable();
 
   constructor(private customersService: CustomersService, private ordersService: OrdersService, private productsService: ProductsService) {
@@ -58,29 +50,30 @@ export class OrderDetailsService {
   setOrderDetails(orderId: string){
     let orderDetails: Partial<OrderDetails> = {};
     orderDetails.products = [];
+    orderDetails.orderId = orderId;
     this.ordersService.getOrder(orderId).subscribe(order=>{
       if(order){
-        console.log(order);
         if(order.totalSum){
           orderDetails.totalSum = order.totalSum;
         }
         if(order.totalQuantity){
           orderDetails.totalQuantity = order.totalQuantity;
         }
-        console.log(orderDetails, 'from details');
+        if(order.customerId){
+          orderDetails.customerId = order.customerId;
+        }
+
         if(order.customerId){
           this.customersService.getCustomer(order.customerId).subscribe(customer=>{
             orderDetails.firstName = customer.firstName;
             orderDetails.lastName = customer.lastName;
             let productsIds: string[] = [];
             let productsQuantity: number[] = [];
-            console.log(order.products, 'in details half way');
             if(order.products){
               for(let [key,value] of order.products){
                 productsIds.push(key);
                 productsQuantity.push(value);
               }
-              console.log(productsIds);
               this.productsService.getProducts(productsIds).subscribe(products=>{
                 let i = 0;
                 products.forEach(product=>{
@@ -91,12 +84,11 @@ export class OrderDetailsService {
                   }
                   i++;
                   if(orderDetails.products){
-                    console.log('final step');
                     orderDetails.products.push(orderView);
                   }
                 });
-                console.log(orderDetails);
                 this.orderDetailsSubject.next(<OrderDetails>orderDetails);
+
               })
             }
           });

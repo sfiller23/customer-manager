@@ -22,10 +22,8 @@ export class OrderResolver implements Resolve<any> {
   resolve(route: ActivatedRouteSnapshot): any{
 
     const id = route.paramMap.get("id");
-    console.log(id);
 
     if(id){
-      console.log("resolving");
       this.orderDetailsService.setOrderDetailsByCustomerId(id);
     }else{
       return of(null);

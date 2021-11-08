@@ -5,6 +5,7 @@ import { OrderDetailsService } from '../../services/order-details.service';
 import { Subscription } from 'rxjs';
 import { first, last, take } from 'rxjs/operators';
 import { CustomerDetailsServiceService } from '../../services/customer-details-service.service';
+import { OrdersService } from '../../services/orders.service';
 
 @Component({
   selector: 'app-view-orders',
@@ -14,6 +15,8 @@ import { CustomerDetailsServiceService } from '../../services/customer-details-s
 export class ViewOrdersComponent implements OnInit, OnDestroy {
 
   orderDetails: OrderDetails = {
+    orderId: '',
+    customerId: '',
     firstName: '',
     lastName: '',
     products: [],
@@ -23,21 +26,25 @@ export class ViewOrdersComponent implements OnInit, OnDestroy {
 
   customer: any;
 
+  orders: any;
+
   subscription: Subscription = new Subscription();
 
-  constructor(private route: ActivatedRoute,private customerDetailsServiceService: CustomerDetailsServiceService ,private orderdetailsService: OrderDetailsService) {
+  constructor(private ordersService: OrdersService ,private route: ActivatedRoute,private customerDetailsServiceService: CustomerDetailsServiceService ,private orderdetailsService: OrderDetailsService) {
   }
 
   ngOnInit(): void {
-    this.subscription = this.orderdetailsService.orderDetails$.subscribe(orderDetails=>{
-      console.log(orderDetails);
-      this.orderDetails = orderDetails;
+
+    this.route.params.subscribe(params=>{
+      const customerId = params.id;
+      this.subscription = this.ordersService.getAllOrders().subscribe(orders=>{
+        let currentOrders = orders.filter(order=>order.customerId===customerId);
+        if(currentOrders){
+          this.orders = currentOrders;
+        }
+      });
     })
 
-    this.customer = this.route.snapshot.data["customer"];
-    if(this.customer){
-      this.customerDetailsServiceService.initCustomer(this.customer);
-    }
   }
 
   ngOnDestroy(){

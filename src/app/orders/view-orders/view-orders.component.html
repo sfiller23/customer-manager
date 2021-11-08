@@ -1,10 +1,16 @@
-<div *ngIf="orderDetails.totalSum!==0" class="row">
+<div class="row">
   <h4>{{orderDetails.firstName}} {{orderDetails.lastName}}</h4>
-  <ol class="list-group list-group-flush">
-    <!-- <li *ngFor="let product of orderDetails.products | keyvalue" class="list-group-item">
-      {{product.key}}  {{product.value | currency}}
-    </li> -->
-    <li id="totalSum" class="list-group-item">TotalSum: {{orderDetails.totalSum | currency}}</li>
-  </ol>
+<table>
+    <tr>
+      <th>Order ID</th>
+      <th>Total Sum</th>
+      <th>Total Quantity</th>
+    </tr>
+  <tr *ngFor="let order of orders">
+    <td><a routerLink="/order/{{order.id}}">{{order.id}}</a></td>
+    <td>{{order.totalSum}}</td>
+    <td>{{order.totalQuantity}}</td>
+  </tr>
+</table>
 
 </div>

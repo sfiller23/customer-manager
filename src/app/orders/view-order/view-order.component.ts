@@ -19,6 +19,8 @@ import { OrderView } from 'src/app/interfaces/orderView';
 export class ViewOrderComponent implements OnInit, OnDestroy {
 
   orderDetails: OrderDetails = {
+    orderId: '',
+    customerId: '',
     firstName: '',
     lastName: '',
     products: [],
@@ -34,13 +36,14 @@ export class ViewOrderComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.orderdetailsService.orderDetails$.subscribe(orderDetails=>{
-      this.orderDetails = orderDetails;
-    })
     this.route.params.subscribe(params=>{
       let orderId = params.id;
       this.orderdetailsService.setOrderDetails(orderId);
     })
+    this.subscription = this.orderdetailsService.orderDetails$.subscribe(orderDetails=>{
+      this.orderDetails = orderDetails;
+    })
+
   }
 
   ngOnDestroy(){
